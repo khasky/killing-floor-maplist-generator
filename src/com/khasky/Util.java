@@ -1,11 +1,17 @@
 package com.khasky;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * @author Khasky
- * @see www.khasky.com
  */
 public class Util
 {
@@ -30,7 +36,7 @@ public class Util
         }
         catch (Exception e)
         {
-            Logger.print("Error on reading file: " + filePath);
+            Logger.printLine("Error on reading file: " + filePath);
             e.printStackTrace();
         }
 
@@ -75,8 +81,35 @@ public class Util
         return outName;
     }
 
-    public static boolean appendLineToFile(String filePath, String line, String lineDelimiter)
+    public static void saveFileBackupIfExists(String filePath)
+    {
+        if (filePath == null || filePath.isEmpty())
         {
+            return;
+        }
+
+        File file = new File(filePath);
+
+        if (!file.exists() || !file.isFile())
+        {
+            return;
+        }
+
+        String baseFileName = file.getName();
+        String extension = getExtensionFromName(baseFileName);
+        String fileName = getNameWithoutExtension(baseFileName);
+
+        String currentDateInFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(Calendar.getInstance().getTime());
+
+        String backupFileName = fileName + "_" + currentDateInFormat + "." + extension;
+
+        File backupFile = new File(backupFileName);
+
+        file.renameTo(backupFile);
+    }
+
+    public static boolean appendLineToFile(String filePath, String line, String lineDelimiter)
+    {
         if (line == null || line.isEmpty())
         {
             return false;

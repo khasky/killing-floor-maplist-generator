@@ -1,15 +1,10 @@
 package com.khasky;
 
 import java.io.File;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import java.util.ArrayList;
 
 /**
  * @author Khasky
- * @see www.khasky.com
  */
 public class Generator
 {
@@ -17,7 +12,7 @@ public class Generator
     {
         if (args.length < 4)
         {
-            Logger.print("Wrong commandline arguments");
+            Logger.printLine("Wrong commandline arguments");
             return;
         }
 
@@ -31,7 +26,7 @@ public class Generator
 
         if (listOfFilesInFolder.length == 0)
         {
-            Logger.print("There are no files in " + mapsFolder + " folder.");
+            Logger.printLine("There are no files in " + mapsFolder + " folder.");
             return;
         }
 
@@ -73,7 +68,7 @@ public class Generator
             // Skip excluded maps
             if (isExcluded)
             {
-                Logger.print("Map skipped: " + fileMapName);
+                Logger.printLine("Map skipped: " + fileMapName);
                 continue;
             }
 
@@ -82,11 +77,11 @@ public class Generator
 
         if (actualMapsList.size() == 0)
         {
-            Logger.print("There are no valid maps to generate the list.");
+            Logger.printLine("There are no valid maps to generate the list.");
             return;
         }
 
-        Logger.print("Generating maps list...");
+        Logger.printLine("Generating maps list...");
 
         writeMapsListToFile(actualMapsList, outputFile);
     }
@@ -98,20 +93,30 @@ public class Generator
             return false;
         }
 
-        int count = 0;
+        if (filePath == null || filePath.isEmpty())
+        {
+            return false;
+        }
+
+        Util.saveFileBackupIfExists(filePath);
+
+        int processed = 0;
+        double progressBefore = 0;
 
         for (String mapName : mapsList)
         {
             Util.appendLineToFile(filePath, "Maps=" + mapName, null);
 
-            count++;
+            processed++;
 
-            int progress = (int) (count / ((double) mapsList.size() / 100));
+            double progress = processed * 100 / mapsList.size();
 
-            if (progress % 5 == 0)
+            if (progress % 10 == 0 && Math.round(progress) > Math.round(progressBefore))
             {
-                System.out.print(progress + "% ");
+                Logger.print(((int) progress) + "% ", progressBefore != 0);
             }
+
+            progressBefore = progress;
         }
 
         return true;

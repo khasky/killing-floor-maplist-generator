@@ -18,4 +18,4 @@ Required commandline arguments (see example in _demo/killingfloor-maplist-genera
 
 ## Requirements
 
- * [Java 8 Update](https://java.com/download) 111 or newer
+ * [Java 8 Update 111](https://java.com/download) or newer
