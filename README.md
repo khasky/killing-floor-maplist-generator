@@ -19,3 +19,7 @@ Required commandline arguments (see example in _demo/killingfloor-maplist-genera
 ## Requirements
 
  * [Java 8 Update 111](https://java.com/download) or newer
+
+## Known bugs
+
+* If 'set EXCLUDEFILE=' is not provided shows wrong args error
